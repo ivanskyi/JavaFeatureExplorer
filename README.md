@@ -7,6 +7,7 @@
 
 ### Java 17
 - [Enhanced Pseudo-Random Number Generators](docs/version/v17/JEP-356-Enhanced-Pseudo-Random-Number-Generators.md)
+- [Sealed Classes](docs/version/v17/JEP-409-Sealed-Classes.md)
 
 ### Java 24
 - [Virtual Threads](docs/version/v24/Virtual-Threads.md)
