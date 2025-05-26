@@ -14,3 +14,6 @@
 
 ### Java 24
 - [Virtual Threads](docs/version/v24/Virtual-Threads.md)
+
+# Practice
+- [Java Memory Model](docs/practice/Java-Memory-Model.md)
