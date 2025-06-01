@@ -17,3 +17,4 @@
 
 # Practice
 - [Java Memory Model](docs/practice/Java-Memory-Model.md)
+- [Object Relational Mapping](docs/practice/Object-Relational-Mapping.md)
