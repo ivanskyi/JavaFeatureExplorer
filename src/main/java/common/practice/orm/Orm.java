@@ -1,16 +1,17 @@
 package common.practice.orm;
 
-import lombok.RequiredArgsConstructor;
-
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.Arrays;
 
-@RequiredArgsConstructor
 public class Orm {
 
     private final DataSource dataSource;
+
+    public Orm(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public <T> T findById(Class<T> entityClass, Object id) {
         try {
