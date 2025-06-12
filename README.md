@@ -20,3 +20,4 @@
 - [Object Relational Mapping](docs/practice/Object-Relational-Mapping.md)
 - [Red-Black Tree](docs/practice/Red-Black-Tree.md)
 - [CompletableFuture](docs/practice/CompletableFuture.md)
+- [Garbage Collectors](docs/practice/Garbage-Collectors.md)
