@@ -21,3 +21,4 @@
 - [Red-Black Tree](docs/practice/Red-Black-Tree.md)
 - [CompletableFuture](docs/practice/CompletableFuture.md)
 - [Garbage Collectors](docs/practice/Garbage-Collectors.md)
+- [Stream](docs/practice/Stream.md)
