@@ -1,14 +1,22 @@
 package common.practice.rbt;
 
-public class Node {
+public class Node<T> {
 
     int key;
-    Node left, right, parent;
+    T value;
+    Node<T> left, right, parent;
     boolean color;
 
-    public Node(int key) {
+    public Node(int key, T value) {
         this.key = key;
+        this.value = value;
         this.color = true;
-        left = right = parent = null;
+        this.left = null;
+        this.right = null;
+        this.parent = null;
+    }
+
+    public T getValue() {
+        return value;
     }
 }

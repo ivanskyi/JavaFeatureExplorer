@@ -1,140 +1,159 @@
 package common.practice.rbt;
 
-public class RedBlackTree {
+public class RedBlackTree<T> {
 
-    private Node root;
-    private final boolean RED = true;
-    private final boolean BLACK = false;
+    private Node<T> root;
+    private static final boolean RED = true;
+    private static final boolean BLACK = false;
 
-    public void insert(int key) {
-        Node node = new Node(key);
-        root = bstInsert(root, node);
-        fixViolation(node);
+    public void insert(int key, T value) {
+        Node<T> newNode = new Node<>(key, value);
+        root = insertNode(root, newNode);
+        fixRedBlackProperties(newNode);
     }
 
-    private Node bstInsert(Node root, Node node) {
-        if (root == null) {
-            return node;
+    private Node<T> insertNode(Node<T> currentRoot, Node<T> newNode) {
+        if (currentRoot == null) {
+            return newNode;
         }
 
-        if (node.key < root.key) {
-            root.left = bstInsert(root.left, node);
-            root.left.parent = root;
-        } else if (node.key > root.key) {
-            root.right = bstInsert(root.right, node);
-            root.right.parent = root;
+        if (newNode.key < currentRoot.key) {
+            currentRoot.left = insertNode(currentRoot.left, newNode);
+            currentRoot.left.parent = currentRoot;
+        } else if (newNode.key > currentRoot.key) {
+            currentRoot.right = insertNode(currentRoot.right, newNode);
+            currentRoot.right.parent = currentRoot;
         }
 
-        return root;
+        return currentRoot;
     }
 
-    private void fixViolation(Node node) {
-        Node parent = null;
-        Node grandParent = null;
-
-        while (node != root && node.color == RED && node.parent.color == RED) {
-            parent = node.parent;
-            grandParent = parent.parent;
+    private void fixRedBlackProperties(Node<T> node) {
+        while (node != root && isRed(node) && isRed(node.parent)) {
+            Node<T> parent = node.parent;
+            Node<T> grandParent = parent.parent;
 
             if (parent == grandParent.left) {
-                Node uncle = grandParent.right;
-
-                if (uncle != null && uncle.color == RED) {
-                    grandParent.color = RED;
-                    parent.color = BLACK;
-                    uncle.color = BLACK;
-                    node = grandParent;
-                } else {
-                    if (node == parent.right) {
-                        leftRotate(parent);
-                        node = parent;
-                        parent = node.parent;
-                    }
-
-                    rightRotate(grandParent);
-                    boolean t = parent.color;
-                    parent.color = grandParent.color;
-                    grandParent.color = t;
-                    node = parent;
-                }
+                node = fixLeftSideViolation(node, parent, grandParent);
             } else {
-                Node uncle = grandParent.left;
-
-                if (uncle != null && uncle.color == RED) {
-                    grandParent.color = RED;
-                    parent.color = BLACK;
-                    uncle.color = BLACK;
-                    node = grandParent;
-                } else {
-                    if (node == parent.left) {
-                        rightRotate(parent);
-                        node = parent;
-                        parent = node.parent;
-                    }
-
-                    leftRotate(grandParent);
-                    boolean t = parent.color;
-                    parent.color = grandParent.color;
-                    grandParent.color = t;
-                    node = parent;
-                }
+                node = fixRightSideViolation(node, parent, grandParent);
             }
         }
         root.color = BLACK;
     }
 
-    private void leftRotate(Node node) {
-        Node rightChild = node.right;
-        node.right = rightChild.left;
+    private Node<T> fixLeftSideViolation(Node<T> node, Node<T> parent, Node<T> grandParent) {
+        Node<T> uncle = grandParent.right;
 
-        if (node.right != null)
+        if (isRed(uncle)) {
+            return recolorNodes(node, parent, grandParent, uncle);
+        } else {
+            return rotateForLeftSide(node, parent, grandParent);
+        }
+    }
+
+    private Node<T> fixRightSideViolation(Node<T> node, Node<T> parent, Node<T> grandParent) {
+        Node<T> uncle = grandParent.left;
+
+        if (isRed(uncle)) {
+            return recolorNodes(node, parent, grandParent, uncle);
+        } else {
+            return rotateForRightSide(node, parent, grandParent);
+        }
+    }
+
+    private Node<T> recolorNodes(Node<T> node, Node<T> parent, Node<T> grandParent, Node<T> uncle) {
+        grandParent.color = RED;
+        parent.color = BLACK;
+        uncle.color = BLACK;
+        return grandParent;
+    }
+
+    private Node<T> rotateForLeftSide(Node<T> node, Node<T> parent, Node<T> grandParent) {
+        if (node == parent.right) {
+            rotateLeft(parent);
+            node = parent;
+            parent = node.parent;
+        }
+        rotateRight(grandParent);
+        swapColors(parent, grandParent);
+        return parent;
+    }
+
+    private Node<T> rotateForRightSide(Node<T> node, Node<T> parent, Node<T> grandParent) {
+        if (node == parent.left) {
+            rotateRight(parent);
+            node = parent;
+            parent = node.parent;
+        }
+        rotateLeft(grandParent);
+        swapColors(parent, grandParent);
+        return parent;
+    }
+
+    private void swapColors(Node<T> node1, Node<T> node2) {
+        boolean tempColor = node1.color;
+        node1.color = node2.color;
+        node2.color = tempColor;
+    }
+
+    private boolean isRed(Node<T> node) {
+        return node != null && node.color == RED;
+    }
+
+    private void rotateLeft(Node<T> node) {
+        Node<T> rightChild = node.right;
+
+        node.right = rightChild.left;
+        if (node.right != null) {
             node.right.parent = node;
+        }
 
         rightChild.parent = node.parent;
-
-        if (node.parent == null)
-            root = rightChild;
-        else if (node == node.parent.left)
-            node.parent.left = rightChild;
-        else
-            node.parent.right = rightChild;
+        updateParentChild(node, rightChild);
 
         rightChild.left = node;
         node.parent = rightChild;
     }
 
-    private void rightRotate(Node node) {
-        Node leftChild = node.left;
-        node.left = leftChild.right;
+    private void rotateRight(Node<T> node) {
+        Node<T> leftChild = node.left;
 
-        if (node.left != null)
+        node.left = leftChild.right;
+        if (node.left != null) {
             node.left.parent = node;
+        }
 
         leftChild.parent = node.parent;
-
-        if (node.parent == null)
-            root = leftChild;
-        else if (node == node.parent.left)
-            node.parent.left = leftChild;
-        else
-            node.parent.right = leftChild;
+        updateParentChild(node, leftChild);
 
         leftChild.right = node;
         node.parent = leftChild;
     }
 
-    public Node get(int key) {
-        return search(root, key);
+    private void updateParentChild(Node<T> oldChild, Node<T> newChild) {
+        if (oldChild.parent == null) {
+            root = newChild;
+        } else if (oldChild == oldChild.parent.left) {
+            oldChild.parent.left = newChild;
+        } else {
+            oldChild.parent.right = newChild;
+        }
     }
 
-    private Node search(Node root, int key) {
-        if (root == null || root.key == key) {
-            return root;
+    public Node<T> get(int key) {
+        return findNode(root, key);
+    }
+
+    private Node<T> findNode(Node<T> currentNode, int key) {
+        if (currentNode == null || currentNode.key == key) {
+            return currentNode;
         }
-        if (key < root.key) {
-            return search(root.left, key);
+
+        if (key < currentNode.key) {
+            return findNode(currentNode.left, key);
         } else {
-            return search(root.right, key);
+            return findNode(currentNode.right, key);
         }
     }
 }
