@@ -42,4 +42,15 @@ public class MessageService {
 
         return result.get();
     }
+
+    public String getGreetingUsingThenRun() {
+        AtomicReference<String> result = new AtomicReference<>();
+
+        CompletableFuture<Void> greetingLoader = CompletableFuture.supplyAsync(() -> "Hello")
+                .thenAccept(result::set)
+                .thenRun(() -> result.set(result.get() + " from Ukraine"));
+
+        greetingLoader.join();
+        return result.get();
+    }
 }

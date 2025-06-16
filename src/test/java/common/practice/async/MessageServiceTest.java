@@ -38,4 +38,12 @@ class MessageServiceTest {
         String greeting = messageService.getGreetingUsingThenAccept();
         assertEquals("Hello", greeting);
     }
+
+    @Test
+    @DisplayName("Get greeting using thenRun()")
+    void getGreetingUsingThenRun() {
+        MessageService messageService = new MessageService();
+        String greeting = messageService.getGreetingUsingThenRun();
+        assertEquals("Hello from Ukraine", greeting);
+    }
 }
