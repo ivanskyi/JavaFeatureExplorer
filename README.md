@@ -15,6 +15,10 @@
 ### Java 24
 - [Virtual Threads](docs/version/v24/Virtual-Threads.md)
 
+
+# Notes:
+- [Concepts](docs/notes/Concepts.md)
+
 # Practice
 - [Java Memory Model](docs/practice/Java-Memory-Model.md)
 - [Object Relational Mapping](docs/practice/Object-Relational-Mapping.md)
