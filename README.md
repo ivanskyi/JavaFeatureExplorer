@@ -26,3 +26,4 @@
 - [CompletableFuture](docs/practice/CompletableFuture.md)
 - [Garbage Collectors](docs/practice/Garbage-Collectors.md)
 - [Stream](docs/practice/Stream.md)
+- [InnerClass](docs/practice/Inner-Class.md)
